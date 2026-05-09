@@ -89,8 +89,10 @@ npm start            # http://localhost:3000
 docker build -t dep-myapp .
 docker run --rm -p 3000:3000 dep-myapp
 
-# 4. Pipeline triggern: einen Push auf main absetzen
-git commit --allow-empty -m "trigger ci"
+# 4. Pipeline triggern: Build-Stamp aktualisieren und pushen
+sed -i -E 's|<!-- ci-build: [^>]*-->|<!-- ci-build: '"$(date -Iseconds)"' -->|' auftrag2_cicd_github_actions/public/index.html
+git add auftrag2_cicd_github_actions/public/index.html
+git commit -m "trigger ci"
 git push origin main
 # → https://github.com/jonasfrey/GIBB_DEP_modul/actions
 
