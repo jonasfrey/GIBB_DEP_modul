@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DEP – Eigene App</title>
+  <title>DEP – C3 auf Render</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; }
@@ -14,17 +14,20 @@
     h2 { font-size: 1rem; margin-bottom: 12px; color: #38bdf8; }
     dl { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; font-size: 0.9rem; }
     dt { color: #94a3b8; }
-    dd { font-family: monospace; }
+    dd { font-family: monospace; word-break: break-all; }
     .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
     input { padding: 6px 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-family: monospace; }
     button { padding: 6px 14px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .out { margin-top: 10px; font-family: monospace; font-size: 0.9rem; color: #a7f3d0; }
+    .out { margin-top: 10px; font-family: monospace; font-size: 0.9rem; color: #a7f3d0; white-space: pre-wrap; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; }
+    .ok { background: #166534; color: #bbf7d0; }
+    .warn { background: #854d0e; color: #fef08a; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>DEP – Eigene App</h1>
-    <p class="sub">Modul HFI_DEP · Containerized Node.js Demo</p>
+    <h1>DEP – C3 · Cloud Deployment</h1>
+    <p class="sub">Modul HFI_DEP · Express + Postgres auf Render</p>
 
     <div class="card">
       <h2>Status</h2>
@@ -33,16 +36,18 @@
         <dt>Version</dt><dd id="version">…</dd>
         <dt>Timestamp</dt><dd id="timestamp">…</dd>
         <dt>App</dt><dd id="app">…</dd>
+        <dt>Persistent</dt><dd id="persistent">…</dd>
       </dl>
     </div>
 
     <div class="card">
-      <h2>Info</h2>
-      <dl>
-        <dt>Name</dt><dd id="i-name">…</dd>
-        <dt>Klasse</dt><dd id="i-class">…</dd>
-        <dt>Hobby</dt><dd id="i-hobby">…</dd>
-      </dl>
+      <h2>Visits (Postgres)</h2>
+      <p class="sub">Beweist, dass Daten ein Redeploy überleben.</p>
+      <div class="row">
+        <button onclick="recordVisit()">+1 Besuch zählen</button>
+        <button onclick="loadVisits()">Aktualisieren</button>
+      </div>
+      <div class="out" id="visits-out">…</div>
     </div>
 
     <div class="card">
@@ -53,40 +58,34 @@
       </div>
       <div class="out" id="prime-out"></div>
     </div>
-
-    <div class="card">
-      <h2>Echo</h2>
-      <div class="row">
-        <input id="echo-msg" type="text" value="hallo deployment">
-        <button onclick="doEcho()">senden</button>
-      </div>
-      <div class="out" id="echo-out"></div>
-    </div>
   </div>
 
   <script>
     async function load() {
-      const [s, i] = await Promise.all([
-        fetch('/api/status').then(r => r.json()),
-        fetch('/api/info').then(r => r.json())
-      ]);
+      const s = await fetch('/api/status').then(r => r.json());
       hostname.textContent = s.hostname;
       version.textContent = s.version;
       timestamp.textContent = s.timestamp;
       app.textContent = s.app;
-      document.getElementById('i-name').textContent = i.name;
-      document.getElementById('i-class').textContent = i.class;
-      document.getElementById('i-hobby').textContent = i.hobby;
+      const p = document.getElementById('persistent');
+      p.textContent = s.persistent ? 'postgres' : 'in-memory (fallback)';
+      p.className = s.persistent ? 'badge ok' : 'badge warn';
+      loadVisits();
+    }
+    async function recordVisit() {
+      await fetch('/api/visits', { method: 'POST' });
+      loadVisits();
+    }
+    async function loadVisits() {
+      const r = await fetch('/api/visits').then(r => r.json());
+      const lines = r.recent.map(e => `#${e.id}  ${e.ts}  ${e.path}`).join('\n');
+      document.getElementById('visits-out').textContent =
+        `Total: ${r.total}\n\n${lines || '(noch keine Einträge)'}`;
     }
     async function checkPrime() {
       const n = document.getElementById('prime-n').value;
       const r = await fetch('/api/prime?n=' + encodeURIComponent(n)).then(r => r.json());
-      document.getElementById('prime-out').textContent = JSON.stringify(r);
-    }
-    async function doEcho() {
-      const m = document.getElementById('echo-msg').value;
-      const r = await fetch('/api/echo/' + encodeURIComponent(m)).then(r => r.json());
-      document.getElementById('echo-out').textContent = JSON.stringify(r);
+      document.getElementById('prime-out').textContent = JSON.stringify(r, null, 2);
     }
     load();
   </script>

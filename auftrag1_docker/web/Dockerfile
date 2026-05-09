@@ -9,11 +9,10 @@ FROM node:24-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 
-# Eigener Non-Root-User
 RUN addgroup -S app && adduser -S app -G app
 
 COPY --from=build /app/node_modules ./node_modules
-COPY --chown=app:app server.js package.json ./
+COPY --chown=app:app server.js db.js logger.js package.json ./
 COPY --chown=app:app public ./public
 
 USER app
