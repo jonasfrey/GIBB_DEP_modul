@@ -1,0 +1,19 @@
+{
+  "name": "dep-myapp-c3",
+  "version": "1.0.0",
+  "description": "Eigene App für das Modul HFI_DEP – Deployment (C3: Cloud-Plattform Deployment auf Render)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "lint": "node --check server.js && node --check db.js && node --check logger.js && node --check test/server.test.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "pg": "^8.13.1"
+  }
+}
