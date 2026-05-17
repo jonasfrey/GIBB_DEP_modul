@@ -1,7 +1,7 @@
 # C3 — Cloud-Plattform Deployment auf Render · Dokumentation
 
 **Modul:** HFI_DEP — Deployment (GIBB) · **Autor:** Jonas Frey · **Stand:** 2026-05-09
-**Repo:** https://github.com/jonasfrey/GIBB_DEP_modul · **Live:** _(URL nach Deployment einsetzen)_
+**Repo:** https://github.com/jonasfrey/GIBB_DEP_modul · **Live:** https://dep-myapp-c3.onrender.com
 
 ---
 

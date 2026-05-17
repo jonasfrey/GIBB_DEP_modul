@@ -30,7 +30,7 @@ Repository: https://github.com/jonasfrey/GIBB_DEP_modul
 
 — C3 · Cloud-Plattform Deployment auf Render —
   Code:        https://github.com/jonasfrey/GIBB_DEP_modul/tree/main/auftrag3_cloud_render
-  Live-URL:    <https://dep-myapp-c3-XXXX.onrender.com>
+  Live-URL:    https://dep-myapp-c3.onrender.com
   Doku:        https://github.com/jonasfrey/GIBB_DEP_modul/blob/main/auftrag3_cloud_render/DOCUMENTATION.md
   Screencast:  <GOOGLE-DRIVE-LINK-C3>
 

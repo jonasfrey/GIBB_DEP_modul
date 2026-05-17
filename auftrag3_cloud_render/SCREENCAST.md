@@ -1,40 +1,58 @@
-# C3 — Screencast (4 Min)
+# C3 — Screencast (2:00 Min — strikt minimal)
 
-## Vorher
-- [ ] **Render-Deployment ist live** — `/api/health` antwortet 200
-- [ ] **Postgres ist provisioniert** — `/api/status` zeigt `persistent: postgres` (grünes Badge)
-- [ ] **Mindestens 1× "+1 Besuch" vorab geklickt** — Counter startet nicht bei 0
-- [ ] Browser-Tabs:
-  1. `https://dep-myapp-c3-<hash>.onrender.com`
-  2. `https://dashboard.render.com` → dein Service → **Logs**-Tab vorbereitet
-- [ ] Terminal im Repo-Root
-- [ ] Loom auf, Mikro getestet
+**Live-URL:** https://dep-myapp-c3.onrender.com
+**Dashboard:** https://dashboard.render.com → Service `dep-myapp-c3`
 
-## Drehbuch
+## Vorher (3 Min vor Aufnahme)
 
-| Zeit | Tun | Sagen |
-|---|---|---|
-| **0:00** | Editor: `auftrag3_cloud_render/render.yaml` zeigen | "C3: Render mit Managed Postgres. Komplett als Blueprint im Repo — Web-Service plus Datenbank, ein git push." |
-| **0:25** | Browser Tab 1 → Live-URL, Status-Karte sichtbar (Persistent: postgres), URL hervorheben | "Öffentlich erreichbar, redet mit der Render-Postgres." |
-| **0:50** | "+1 Besuch" klicken → Counter merken (z. B. "5") | "Den Counter merken wir uns — er soll ein Redeploy überleben." |
-| **1:10** | Terminal: `git commit --allow-empty -m "demo" && git push origin main` | "Push auf main → Render-Webhook → Auto-Deploy." |
-| **1:40** | Browser Tab 2 → **Events**, dann **Logs** live | "Build läuft, dann startet der neue Container — JSON-Logs: `postgres ready`, `listening`." |
-| **2:30** | Warten bis "Live" grün ist | "Health-Check passt, Render schaltet zero-downtime um." |
-| **2:50** | Browser Tab 1 → Hard-Reload (Ctrl+Shift+R) | "Neuer Hostname — anderer Container." |
-| **3:10** | Counter ansehen → **gleicher Wert wie vorher** | "Counter überlebt: DB lebt unabhängig vom Container." |
-| **3:25** | Nochmals "+1 Besuch" → steigt | "Normalbetrieb läuft." |
-| **3:45** | GitHub-Repo → `auftrag3_cloud_render/` kurz scrollen | "render.yaml, README, DOCUMENTATION mit KI-Deklaration im Repo." |
-| **3:55** | Outro | "Danke." |
+- [ ] **Service warmlaufen** — Live-URL im Browser oeffnen, Status muss `postgres` zeigen (Cold-Start vermeiden)
+- [ ] **Counter-Stand notieren** (aktuell: `curl https://dep-myapp-c3.onrender.com/api/visits` → `total`)
+- [ ] **Browser-Tabs vorbereiten:**
+  1. `https://dep-myapp-c3.onrender.com` (App)
+  2. `https://dashboard.render.com` → `dep-myapp-c3` → **Logs**-Tab
+- [ ] **Terminal** im Repo-Root, `git status` zeigt 3 modified files
+- [ ] **Loom** auf, Mikro getestet
+
+---
+
+## Drehbuch (2:00 Min)
+
+| Zeit | Bildschirm | Aktion | Was du sagst |
+|---|---|---|---|
+| **0:00** | Browser Tab 1 (App) | URL in Adresszeile markieren, Status-Karte zeigen, **Persistent: postgres** Badge | "C3 auf Render. Oeffentliche URL `dep-myapp-c3.onrender.com`, Postgres ist verbunden." |
+| **0:15** | Browser Tab 1 | "+1 Besuch" klicken, Counter merken (z.B. 10) | "Counter steht bei 10 — soll den Redeploy ueberleben." |
+| **0:25** | Terminal | `git -c user.name="Jonas Frey" -c user.email="jonas.immanuel.frey@gmail.com" commit -am "docs(c3): Live-URL"` und `git push origin main` | "`git push` auf main loest Render-Auto-Deploy aus." |
+| **0:45** | Browser Tab 2 (Logs) | Logs scrollen, JSON-Zeilen sichtbar: `==> Building...`, `postgres ready`, `listening` | "Im Render-Dashboard live die strukturierten JSON-Logs: Build, Postgres ready, listening." |
+| **1:25** | Browser Tab 1 | Hard-Reload (Ctrl+Shift+R), neuer Hostname sichtbar, Counter **immer noch 10** | "Neuer Container — Counter ueberlebt: DB unabhaengig vom Service." |
+| **1:45** | Browser Tab 1 | "+1 Besuch" klicken → 11 | "Normalbetrieb laeuft." |
+| **1:55** | Outro | Aufnahme stoppen | "Danke." |
+
+---
 
 ## Bewertungs-Aspekte (alle ✓)
-- Öffentlich erreichbare URL
-- Deployment-Trigger (git push)
-- Logs im Plattform-Interface
+
+- [x] **Oeffentlich erreichbare URL** — durchgaengig Tab 1
+- [x] **Deployment-Trigger** — `git push` bei 0:25
+- [x] **Logs im Plattform-Interface** — Tab 2 bei 0:45
+
+---
 
 ## Falls live etwas schiefgeht
-- `persistent: in-memory`: `DATABASE_URL` nicht injiziert — Service → Environment prüfen
-- 503 / Cold Start: 30 s warten, F5
-- Build failt: `rootDir: auftrag3_cloud_render` in `render.yaml` prüfen
+
+| Problem | Sofort-Fix |
+|---|---|
+| `persistent: in-memory` | DATABASE_URL pruefen im Render-Service → Environment |
+| 503 / Cold Start | 30 s warten, F5. Vorher warmlaufen lassen! |
+| `git push` rejected | `git pull --rebase origin main` |
+| Keine Aenderungen | `git commit --allow-empty -m "demo redeploy"` |
+
+---
 
 ## Nach der Aufnahme
-README.md → Live-URL und Loom-Link einfügen.
+
+1. Loom → **Share** → **Download MP4**
+2. Datei umbenennen: `dep-c3-screencast-jonasfrey.mp4`
+3. Google Drive → selber Ordner wie C1/C2
+4. Freigabe: **Jeder mit dem Link → Betrachter**
+5. Inkognito-Tab testen
+6. Link in [`ABGABE_TEAMS.md`](../ABGABE_TEAMS.md) Zeile 35 einsetzen

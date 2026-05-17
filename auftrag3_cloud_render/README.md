@@ -12,7 +12,7 @@ Express-App aus C2, deployed auf [Render](https://render.com) mit **Managed Post
 ## Live-URL
 
 ```
-https://dep-myapp-c3.onrender.com         ← nach Deployment hier eintragen
+https://dep-myapp-c3.onrender.com
 ```
 
 ## Voraussetzungen
